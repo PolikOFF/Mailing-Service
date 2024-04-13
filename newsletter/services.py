@@ -13,7 +13,7 @@ from newsletter.models import Mail, Log
 
 def my_job():
     day = timedelta(days=1, hours=0, minutes=0)
-    weak = timedelta(days=7, hours=0, minutes=0)
+    week = timedelta(days=7, hours=0, minutes=0)
     month = timedelta(days=30, hours=0, minutes=0)
 
     mails = Mail.objects.all().filter(status='создана') \
@@ -42,11 +42,11 @@ def my_job():
         log = Log(mail=mail, status=status)
         log.save()
 
-        if mail.interval == 'раз в день':
+        if mail.period == 'раз в день':
             mail.next_date = log.last_time_mail + day
-        elif mail.interval == 'раз в неделю':
-            mail.next_date = log.last_time_mail+ weak
-        elif mail.interval == 'раз в месяц':
+        elif mail.period == 'раз в неделю':
+            mail.next_date = log.last_time_mail + week
+        elif mail.period == 'раз в месяц':
             mail.next_date = log.last_time_mail + month
 
         if mail.next_date < mail.end_date:
@@ -88,9 +88,9 @@ def send_mailing():
                         fail_silently=False
                     )
 
-                    log = Logs.objects.create(
+                    log = Log.objects.create(
                         date=mailing.time_start,
-                        status=Logs.SENT,
+                        status=Log.SENT,
                         mailing=mailing,
                         client=client
                     )
@@ -98,9 +98,9 @@ def send_mailing():
                     return log
 
                 except SMTPException as error:
-                    log = Logs.objects.create(
+                    log = Log.objects.create(
                         date=mailing.time_start,
-                        status=Logs.FAILED,
+                        status=Log.FAILED,
                         mailling=mailing,
                         client=client,
                         response=error
