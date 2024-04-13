@@ -1,0 +1,54 @@
+{% extends 'newsletter/base.html' %}
+{% block content %}
+<div class="col-12 mb-5">
+    {% if not user.is_staff%}
+    <p><a class="btn btn-primary" href="{% url 'mails:create_mail'%}" role="button">Добавить рассылку</a></p>
+    {% endif %}
+</div>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Название рассылки</th>
+        <th scope="col">Кому (клиенты сервиса)</th>
+        <th scope="col">Сообщение для рассылки</th>
+        <th scope="col">Статус рассылки</th>
+        {% if user.is_staff or user.is_superuser%}
+        <th scope="col">Автор</th>
+        <th scope="col">Активация рассылки</th>
+        {% endif %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for object in object_list %}
+    <tr>
+        <td>{{object.name|slice:50}}</td>
+        <td>
+            <ul>
+                {% for value in object.clients.all.values_list %}
+                <li>{{value.1 }}</li>
+                {% endfor%}
+            </ul>
+        </td>
+        <td>{{object.message|slice:50}}</td>
+        <td>{{object.status|slice:50}}</td>
+        {% if user.is_staff or user.is_superuser%}
+        <td>{{object.owner}}</td>
+        <td>{{object.is_active}}</td>
+        {% endif %}
+        {% if perms.mails.set_is_active %}
+        {% if object.is_active %}
+        <td><a href="{% url 'mails:toogle_activity' object.pk %}" class="btn btn-warning">Деактивировать</a></td>
+        {% else %}
+        <td><a href="{% url 'mails:toogle_activity' object.pk %}" class="btn btn-success">Активировать</a></td>
+        {% endif %}
+        {% endif %}
+        <td><a href="{% url 'mails:view_mail' object.pk%}" class="btn btn-primary">detail view</a></td>
+        {% if not perms.mails.set_is_active %}
+        <td><a href="{% url 'mails:edit_mail' object.pk%}" class="btn btn-primary">edit</a></td>
+        <td><a href="{% url 'mails:delete_mail' object.pk%}" class="btn btn-primary">delete</a></td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

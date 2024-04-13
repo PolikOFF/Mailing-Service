@@ -1,0 +1,36 @@
+{% extends 'newsletter/base.html' %}
+{% block content %}
+<div class="col-12 mb-5">
+    {% if not user.is_staff%}
+    <p><a class="btn btn-primary" href="{% url 'mails:create_message'%}" role="button">Добавить сообщение для
+        рассылки</a></p>
+    {% endif %}
+</div>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Тема письма</th>
+        <th scope="col">Тело письма</th>
+        {% if user.is_staff or user.is_superuser%}
+        <th scope="col">Автор</th>
+        {% endif %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for object in object_list %}
+    <tr>
+        <td>{{object|slice:50}}</td>
+        <td>{{object.body|slice:50}}</td>
+        {% if user.is_staff or user.is_superuser%}
+        <td>{{object.owner}}</td>
+        {% endif %}
+        <td><a href="{% url 'mails:view_message' object.pk%}" class="btn btn-primary">detail view</a></td>
+        {% if not user.is_staff%}
+        <td><a href="{% url 'mails:edit_message' object.pk%}" class="btn btn-primary">edit</a></td>
+        <td><a href="{% url 'mails:delete_message' object.pk%}" class="btn btn-primary">delete</a></td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

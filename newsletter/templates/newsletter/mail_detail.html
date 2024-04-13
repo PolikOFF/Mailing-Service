@@ -1,0 +1,28 @@
+{% extends 'newsletter/base.html' %}
+{% block content %}
+
+<div class="row">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col">
+            <div class="card h-100">
+                <h5 class="card-header"> Название рассылки: {{object.name}} </h5>
+                <div class="card-body">
+                    <p class="card-text">Кому (клиенты сервиса):
+                    <ul>
+                        {% for value in object.clients.all.values_list %}
+                        <li>{{value.1 }}</li>
+                        {% endfor%}
+                    </ul>
+                    </p>
+                    <p class="card-text">Сообщение: {{object.message}} </p>
+                    <p class="card-text">Дата начала рассылки: {{object.date_start}} </p>
+                    <p class="card-text">Дата окончания рассылки: {{object.date_end}} </p>
+                    <p class="card-text">Время рассылки: {{object.start_time}} </p>
+                    <p class="card-text">Периодичность рассылки: {{object.period}} </p>
+                    <p class="card-text">Статус рассылки: {{object.status}} </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
