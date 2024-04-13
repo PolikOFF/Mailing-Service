@@ -23,8 +23,7 @@ class IndexView(TemplateView):
         context_data['mail_count'] = get_cache_for_mailings()
         context_data['active_mail_count'] = len(Mail.objects.filter(is_active=True))
         context_data['client_count'] = len(Client.objects.all())
-        # context_data['object_list'] = Blog.objects.all()
-        # context_data['object_list'] = random.sample(list(Blog.objects.all()), 3)
+        context_data['object_list'] = random.sample(list(Blog.objects.all()), 3)
 
         return context_data
 
