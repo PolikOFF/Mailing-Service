@@ -4,8 +4,6 @@ from django.views.generic import DetailView
 from blog.models import Blog
 
 
-# Create your views here.
-
 def blog(request):
     context = {
         'object_list': Blog.objects.all(),

@@ -1,6 +1,5 @@
 import random
 
-from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import Permission
 from django.shortcuts import render, get_object_or_404, redirect
@@ -14,7 +13,7 @@ from newsletter.services import get_cache_for_mailings
 
 
 class IndexView(TemplateView):
-    template_name = 'mails/index.html'
+    template_name = 'newsletter/index.html'
     extra_context = {
         'title': 'Главная',
     }
@@ -24,7 +23,8 @@ class IndexView(TemplateView):
         context_data['mail_count'] = get_cache_for_mailings()
         context_data['active_mail_count'] = len(Mail.objects.filter(is_active=True))
         context_data['client_count'] = len(Client.objects.all())
-        context_data['object_list'] = random.sample(list(Blog.objects.all()), 3)
+        # context_data['object_list'] = Blog.objects.all()
+        # context_data['object_list'] = random.sample(list(Blog.objects.all()), 3)
 
         return context_data
 
@@ -40,7 +40,7 @@ def contacts(request):
         message = request.POST.get('message')
         print(f"{name} ({phone}, {email}): {message}")
 
-    return render(request, 'mails/contacts.html', context)
+    return render(request, 'newsletter/contacts.html', context)
 
 
 class ClientListView(LoginRequiredMixin, ListView):
@@ -55,18 +55,14 @@ class ClientListView(LoginRequiredMixin, ListView):
         return Client.objects.filter(owner=self.request.user)
 
 
-# class ClientDetailView(PermissionRequiredMixin, DetailView):
 class ClientDetailView(DetailView):
     model = Client
-    # permission_required = 'mails.view_client'
 
 
 class ClientCreateView(CreateView):
     model = Client
     form_class = ClientForm
-    success_url = reverse_lazy('mails:client_list')
-
-    # permission_required = 'mails.add_client'
+    success_url = reverse_lazy('newsletter:client_list')
 
     def form_valid(self, form):
         self.object = form.save()
@@ -78,14 +74,12 @@ class ClientCreateView(CreateView):
 class ClientUpdateView(UpdateView):
     model = Client
     form_class = ClientForm
-    success_url = reverse_lazy('mails:client_list')
-    # permission_required = 'mails.change_client'
+    success_url = reverse_lazy('newsletter:client_list')
 
 
 class ClientDeleteView(DeleteView):
     model = Client
-    success_url = reverse_lazy('mails:client_list')
-    # permission_required = 'mails.delete_client'
+    success_url = reverse_lazy('newsletter:client_list')
 
 
 class MessageListView(LoginRequiredMixin, ListView):
@@ -102,15 +96,12 @@ class MessageListView(LoginRequiredMixin, ListView):
 
 class MessageDetailView(DetailView):
     model = Message
-    # permission_required = 'mails.view_message'
 
 
 class MessageCreateView(CreateView):
     model = Message
     form_class = MessageForm
-    success_url = reverse_lazy('mails:message_list')
-
-    # permission_required = 'mails.add_message'
+    success_url = reverse_lazy('newsletter:message_list')
 
     def form_valid(self, form):
         self.object = form.save()
@@ -122,14 +113,12 @@ class MessageCreateView(CreateView):
 class MessageUpdateView(UpdateView):
     model = Message
     form_class = MessageForm
-    success_url = reverse_lazy('mails:message_list')
-    # permission_required = 'mails.change_message'
+    success_url = reverse_lazy('newsletter:message_list')
 
 
 class MessageDeleteView(DeleteView):
     model = Message
-    success_url = reverse_lazy('mails:message_list')
-    # permission_required = 'mails.delete_message'
+    success_url = reverse_lazy('newsletter:message_list')
 
 
 class MailListView(LoginRequiredMixin, ListView):
@@ -150,14 +139,13 @@ class MailListView(LoginRequiredMixin, ListView):
 
 class MailDetailView(PermissionRequiredMixin, DetailView):
     model = Mail
-    permission_required = 'mails.view_mail'
+    permission_required = 'newsletter.view_mail'
 
 
 class MailCreateView(CreateView):
     model = Mail
     form_class = MailForm
-    success_url = reverse_lazy('mails:mail_list')
-    # permission_required = 'mails.add_mail'
+    success_url = reverse_lazy('newsletter:mail_list')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -171,11 +159,11 @@ class MailCreateView(CreateView):
         return super().form_valid(form)
 
 
-class MailUpdateView(PermissionRequiredMixin,UpdateView):
+class MailUpdateView(PermissionRequiredMixin, UpdateView):
     model = Mail
     form_class = MailForm
-    success_url = reverse_lazy('mails:mail_list')
-    permission_required = 'mails.change_mail'
+    success_url = reverse_lazy('newsletter:mail_list')
+    permission_required = 'newsletter.change_mail'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -183,10 +171,10 @@ class MailUpdateView(PermissionRequiredMixin,UpdateView):
         return kwargs
 
 
-class MailDeleteView(PermissionRequiredMixin,DeleteView):
+class MailDeleteView(PermissionRequiredMixin, DeleteView):
     model = Mail
-    success_url = reverse_lazy('mails:mail_list')
-    permission_required = 'mails.delete_mail'
+    success_url = reverse_lazy('newsletter:mail_list')
+    permission_required = 'newsletter.delete_mail'
 
 
 def toogle_activity(request, pk):
@@ -196,4 +184,4 @@ def toogle_activity(request, pk):
     else:
         mail_item.is_active = True
     mail_item.save()
-    return redirect('mails:mail_list')
+    return redirect('newsletter:mail_list')

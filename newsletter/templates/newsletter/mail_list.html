@@ -2,7 +2,7 @@
 {% block content %}
 <div class="col-12 mb-5">
     {% if not user.is_staff%}
-    <p><a class="btn btn-primary" href="{% url 'mails:create_mail'%}" role="button">Добавить рассылку</a></p>
+    <p><a class="btn btn-primary" href="{% url 'newsletter:create_mail'%}" role="button">Добавить рассылку</a></p>
     {% endif %}
 </div>
 <table class="table">
@@ -37,15 +37,15 @@
         {% endif %}
         {% if perms.mails.set_is_active %}
         {% if object.is_active %}
-        <td><a href="{% url 'mails:toogle_activity' object.pk %}" class="btn btn-warning">Деактивировать</a></td>
+        <td><a href="{% url 'newsletter:toogle_activity' object.pk %}" class="btn btn-warning">Деактивировать</a></td>
         {% else %}
-        <td><a href="{% url 'mails:toogle_activity' object.pk %}" class="btn btn-success">Активировать</a></td>
+        <td><a href="{% url 'newsletter:toogle_activity' object.pk %}" class="btn btn-success">Активировать</a></td>
         {% endif %}
         {% endif %}
-        <td><a href="{% url 'mails:view_mail' object.pk%}" class="btn btn-primary">detail view</a></td>
+        <td><a href="{% url 'newsletter:view_mail' object.pk%}" class="btn btn-primary">detail view</a></td>
         {% if not perms.mails.set_is_active %}
-        <td><a href="{% url 'mails:edit_mail' object.pk%}" class="btn btn-primary">edit</a></td>
-        <td><a href="{% url 'mails:delete_mail' object.pk%}" class="btn btn-primary">delete</a></td>
+        <td><a href="{% url 'newsletter:edit_mail' object.pk%}" class="btn btn-primary">edit</a></td>
+        <td><a href="{% url 'newsletter:delete_mail' object.pk%}" class="btn btn-primary">delete</a></td>
         {% endif %}
     </tr>
     {% endfor %}

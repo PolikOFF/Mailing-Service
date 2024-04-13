@@ -46,7 +46,6 @@ def activate_user(request):
 
 
 def generate_new_password(request):
-    # new_password  = ''.join([str(random.randint(0, 9)) for string in range(10)])
     new_password = get_new_password()
     send_mail(
         subject='Вы сменили пароль',
@@ -65,7 +64,7 @@ class ProfileView(UpdateView):
     form_class = UserProfileForm
     success_url = reverse_lazy('users:profile')
 
-    def get_object(self, queryset=None):  # тем самым уходим от привязки с pk
+    def get_object(self, queryset=None):
         return self.request.user
 
 

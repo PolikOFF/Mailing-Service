@@ -15,5 +15,4 @@ urlpatterns = [
     path('verify/', activate_user),
     path('user_list/', get_users_list, name='list_view'),
     path('activity/<int:pk>/', toogle_activity, name='toogle_activity'),
-
 ]

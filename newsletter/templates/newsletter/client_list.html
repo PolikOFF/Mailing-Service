@@ -2,7 +2,7 @@
 {% block content %}
 <div class="col-12 mb-5">
     {% if not user.is_staff%}
-    <p><a class="btn btn-primary" href="{% url 'mails:create_client'%}" role="button">Добавить клиента</a></p>
+    <p><a class="btn btn-primary" href="{% url 'newsletter:create_client'%}" role="button">Добавить клиента</a></p>
     {% endif %}
 </div>
 <table class="table">
@@ -29,14 +29,13 @@
         {% if user.is_staff or user.is_superuser%}
         <td>{{object.owner}}</td>
         {% endif %}
-        <td><a href="{% url 'mails:view_client' object.pk%}" class="btn btn-primary">detail view</a></td>
+        <td><a href="{% url 'newsletter:view_client' object.pk%}" class="btn btn-primary">detail view</a></td>
         {% if not user.is_staff%}
-        <td><a href="{% url 'mails:edit_client' object.pk%}" class="btn btn-primary">edit</a></td>
-        <td><a href="{% url 'mails:delete_client' object.pk%}" class="btn btn-primary">delete</a></td>
+        <td><a href="{% url 'newsletter:edit_client' object.pk%}" class="btn btn-primary">edit</a></td>
+        <td><a href="{% url 'newsletter:delete_client' object.pk%}" class="btn btn-primary">delete</a></td>
         {% endif %}
     </tr>
     {% endfor %}
     </tbody>
 </table>
-</div>
 {% endblock %}
