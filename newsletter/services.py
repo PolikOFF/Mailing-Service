@@ -43,13 +43,14 @@ def my_job():
         log.save()
 
         if mail.period == 'раз в день':
-            mail.next_date = log.last_time_mail + day
+            mail.date_next = log.last_time_mail + day
         elif mail.period == 'раз в неделю':
-            mail.next_date = log.last_time_mail + week
+            mail.date_next = log.last_time_mail + week
         elif mail.period == 'раз в месяц':
-            mail.next_date = log.last_time_mail + month
+            mail.date_next = log.last_time_mail + month
 
-        if mail.next_date < mail.end_date:
+        mail.date_next = datetime.date(mail.date_next)
+        if mail.date_next < mail.date_end:
             mail.status = 'создана'
         else:
             mail.status = 'завершена'
@@ -111,4 +112,4 @@ def send_mailing():
 
         else:
             mailing.status = Mail.DONE
-            mailing.save()
+            mailing.save(update_fields=['status'])
